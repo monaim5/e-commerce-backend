@@ -1,6 +1,7 @@
 package com.app.ecommerce.services;
 
 import com.app.ecommerce.dto.RegisterRequest;
+import com.app.ecommerce.exceptions.MonaimException;
 import com.app.ecommerce.models.NotificationEmail;
 import com.app.ecommerce.models.User;
 import com.app.ecommerce.models.VerificationToken;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -48,5 +50,19 @@ public class AuthService {
         verificationToken.setUser(user);
         verificationTokenRepository.save(verificationToken);
         return token;
+    }
+
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        verificationToken.orElseThrow(() -> new MonaimException("invalid token"));
+        fetchUserAndEnable(verificationToken.get());
+        verificationTokenRepository.delete(verificationToken.get());
+    }
+
+    @Transactional
+    public void fetchUserAndEnable(VerificationToken verificationToken){
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }

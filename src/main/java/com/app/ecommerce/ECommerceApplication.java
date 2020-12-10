@@ -9,16 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Random;
 
 @SpringBootApplication
+@EnableAsync
 public class ECommerceApplication {
 
 //	@Autowired
 //	private ProductRepository productRepository;
 //	@Autowired
 //	private CategoryRepository categoryRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceApplication.class, args);
 	}
