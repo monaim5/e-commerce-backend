@@ -1,18 +1,22 @@
 package com.app.ecommerce.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.app.ecommerce.exceptions.MonaimException;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class Product implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +24,9 @@ public class Product implements Serializable {
     private String designation;
     private double price;
     private int quantity;
-    private String photo;
     private boolean available;
+    @OneToMany(mappedBy = "product")
+    private Collection<Photo> photos;
     @ManyToOne
     private Category category;
 

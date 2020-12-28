@@ -1,5 +1,7 @@
 package com.app.ecommerce.controllers;
 
+import com.app.ecommerce.dto.AuthenticationResponse;
+import com.app.ecommerce.dto.LoginRequest;
 import com.app.ecommerce.dto.RegisterRequest;
 import com.app.ecommerce.services.AuthService;
 import lombok.AllArgsConstructor;
@@ -26,5 +28,11 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token){
         authService.verifyAccount(token);
         return new ResponseEntity<>("account activated successfully", HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @PostMapping("/signin")
+    public AuthenticationResponse signin(@RequestBody LoginRequest loginRequest){
+        return authService.signin(loginRequest);
     }
 }
