@@ -1,19 +1,29 @@
 package com.app.ecommerce.controllers;
 
+import com.app.ecommerce.dto.CategoryDto;
+import com.app.ecommerce.services.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RequestMapping("api/category")
 @RestController
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @GetMapping
-    public ResponseEntity<String> getCategories() {
-        return new ResponseEntity<>("hello", HttpStatus.OK);
+    public ResponseEntity<List<CategoryDto>> getCategories() {
+        return new ResponseEntity<>(categoryService.getAll(), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(categoryService.save(categoryDto));
     }
 }

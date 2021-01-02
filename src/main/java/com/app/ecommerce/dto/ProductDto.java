@@ -18,7 +18,9 @@ public class ProductDto {
     private Long id;
     private String name;
     private String designation;
+    private String description;
+    private float price;
     private int quantity;
-    private String category;
-    private Collection<String> photos;
+    private Long categoryId;
+    private Collection<PhotoDto> photos;
 }
