@@ -1,15 +1,10 @@
 package com.app.ecommerce.models;
 
-import com.app.ecommerce.exceptions.MonaimException;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,7 +23,7 @@ public class Product implements Serializable {
     private int quantity;
     private boolean available;
     @OneToMany(mappedBy = "product")
-    private Collection<Photo> photos;
+    private List<Photo> photos;
     @ManyToOne
     private Category category;
 

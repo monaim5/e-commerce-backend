@@ -1,17 +1,17 @@
 package com.app.ecommerce.dto;
 
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 @Data
-@ToString
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 public class PhotoDto {
    private Long id;
    private String url;
    private String title;
+   private Long productId;
    private MultipartFile file;
 }

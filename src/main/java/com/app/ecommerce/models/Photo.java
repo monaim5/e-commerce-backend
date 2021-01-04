@@ -20,6 +20,6 @@ public class Photo {
     private String title;
     private String path;
     private String url;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Product product;
 }
