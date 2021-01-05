@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.ManyToOne;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,8 +20,9 @@ public class ProductDto {
     private String name;
     private String designation;
     private String description;
+    private boolean available;
     private float price;
     private int quantity;
     private Long categoryId;
-    private Collection<PhotoDto> photos;
+    private List<PhotoDto> photos;
 }

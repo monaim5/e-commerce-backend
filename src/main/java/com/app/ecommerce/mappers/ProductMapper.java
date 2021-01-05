@@ -20,6 +20,7 @@ public interface ProductMapper {
     @Mapping(target = "name", source = "productDto.name")
     @Mapping(target = "description", source = "productDto.description")
     @Mapping(target = "category", source = "category")
+    @Mapping(target = "photos", ignore = true)
     Product mapToProduct(ProductDto productDto, Category category);
 
     @Mapping(target = "photos", expression = "java(mapPhotosToDtos(product.getPhotos()))")

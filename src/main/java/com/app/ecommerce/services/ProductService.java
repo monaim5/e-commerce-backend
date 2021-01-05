@@ -36,26 +36,19 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional
-    public ProductDto save(ProductDto productDto){
+    public ProductDto create(ProductDto productDto){
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new MonaimException("no such category"));
 
-        List<Photo> photos = productDto.getPhotos().stream().map(
-                (dto) -> photoRepository.findById(dto.getId()).orElseThrow(() -> new MonaimException("cant get photo"))
-        ).collect(Collectors.toList());
-
+        List<Long> photoIds = productDto.getPhotos().stream().map(PhotoDto::getId).collect(Collectors.toList());
         Product product = productRepository.save(productMapper.mapToProduct(productDto, category));
-
-        photos.forEach(photo -> {
-            photo.setProduct(product);
-            photoRepository.save(photo);
-        });
-
-        return productMapper.mapToDto(product);
+        photoRepository.updateProduct(photoIds, product.getId());
+        productDto.setId(product.getId());
+        return productDto;
     }
 
     @Transactional
-    public ProductDto edit(Long id, ProductDto productDto) {
+    public ProductDto update(Long id, ProductDto productDto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new MonaimException("Product not found for this id :: " + id));
         updateProductFromDto(product, productDto);
@@ -63,21 +56,22 @@ public class ProductService {
         return productDto;
     }
 
-    public ProductDto get(Long id) {
+    public ProductDto retrieve(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new MonaimException("Product not found for this id :: " + id));
-        return mapToDto(product);
+        return productMapper.mapToDto(product);
     }
 
-    public void delete(Long id) {
+    @Transactional
+    public void destroy(Long id) {
         productRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getAll(){
+    public List<ProductDto> list(){
         return productRepository.findAll()
             .stream()
-            .map(this::mapToDto)
+            .map(productMapper::mapToDto)
             .collect(Collectors.toList());
     }
 
@@ -92,29 +86,35 @@ public class ProductService {
         product.setCategory(category);
     }
 
-    public Product mapToProduct(ProductDto productDto){
-        Category category = categoryRepository.findById(productDto.getCategoryId())
-                .orElseThrow(() -> new MonaimException("no such category"));
-        return Product.builder()
-                .name(productDto.getName())
-                .designation(productDto.getDesignation())
-                .description(productDto.getDescription())
-                .price(productDto.getPrice())
-                .quantity(productDto.getQuantity())
-                .category(category)
-                .build();
+    public List<ProductDto> listByCategory(String categoryName) {
+        Category category = categoryRepository.findByNameEquals(categoryName);
+        List<Product> products = productRepository.findAllByCategory(category);
+        return products.stream().map(productMapper::mapToDto).collect(Collectors.toList());
     }
 
-    private ProductDto mapToDto(Product product) {
-        List<PhotoDto> photos = product.getPhotos().stream().map(
-                PhotoService::mapToDto).collect(Collectors.toList());
+//    public Product mapToProduct(ProductDto productDto){
+//        Category category = categoryRepository.findById(productDto.getCategoryId())
+//                .orElseThrow(() -> new MonaimException("no such category"));
+//        return Product.builder()
+//                .name(productDto.getName())
+//                .designation(productDto.getDesignation())
+//                .description(productDto.getDescription())
+//                .price(productDto.getPrice())
+//                .quantity(productDto.getQuantity())
+//                .category(category)
+//                .build();
+//    }
 
-        return ProductDto.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .designation(product.getDesignation())
-                .categoryId(product.getCategory().getId())
-                .photos(photos)
-                .build();
-    }
+//    private ProductDto mapToDto(Product product) {
+//        List<PhotoDto> photos = product.getPhotos().stream().map(
+//                PhotoService::mapToDto).collect(Collectors.toList());
+//
+//        return ProductDto.builder()
+//                .id(product.getId())
+//                .name(product.getName())
+//                .designation(product.getDesignation())
+//                .categoryId(product.getCategory().getId())
+//                .photos(photos)
+//                .build();
+//    }
 }

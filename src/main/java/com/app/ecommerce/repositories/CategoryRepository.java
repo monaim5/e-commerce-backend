@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 //@CrossOrigin(origins = "**", allowedHeaders = "*")
 @RepositoryRestResource
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    Category findByNameEquals(String categoryName);
 }
