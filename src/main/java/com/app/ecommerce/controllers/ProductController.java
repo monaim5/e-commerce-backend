@@ -39,11 +39,16 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> listProducts(
-            @RequestParam("category") Optional<String> categoryName
+            @RequestParam(value = "name") Optional<String> name,
+            @RequestParam(value = "category") Optional<String> category,
+            @RequestParam(value = "page") Optional<Integer> page,
+            @RequestParam(value = "pageSize") Optional<Integer> pageSize,
+            @RequestParam(value = "sortBy") Optional<String> sortBy
+    ) {
+        List<ProductDto> productList = productService.list(name, category, page, pageSize, sortBy);
 
-            ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.list());
+
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
     @PutMapping("/{id}")

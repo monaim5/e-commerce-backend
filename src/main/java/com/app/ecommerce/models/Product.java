@@ -21,6 +21,7 @@ public class Product implements Serializable {
 //    private float rate;
     private double price;
     private int quantity;
+    private int sales;
     private boolean available;
     @OneToMany(mappedBy = "product")
     private List<Photo> photos;

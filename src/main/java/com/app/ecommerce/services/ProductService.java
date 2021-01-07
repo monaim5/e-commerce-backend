@@ -11,11 +11,18 @@ import com.app.ecommerce.models.Product;
 import com.app.ecommerce.repositories.CategoryRepository;
 import com.app.ecommerce.repositories.PhotoRepository;
 import com.app.ecommerce.repositories.ProductRepository;
+import com.app.ecommerce.specifications.ProductSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -75,6 +82,25 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<ProductDto> list(Optional<String> name,
+                              Optional<String> categoryName,
+                              Optional<Integer> page,
+                              Optional<Integer> pageSize,
+                              Optional<String> sortBy) {
+
+        Specification<Product> nameSpec = ProductSpecification.nameLike(name.orElse(null));
+        Specification<Product> categorySpec = ProductSpecification.categoryEquals(categoryName.orElse(null));
+
+        Specification<Product> specification = Specification.where(nameSpec).and(categorySpec);
+        return productRepository.findAll(
+                specification,
+                PageRequest.of(page.orElse(0), pageSize.orElse(50),
+                        Sort.Direction.DESC, sortBy.orElse("id")))
+                .getContent()
+                .stream().map(productMapper::mapToDto).collect(Collectors.toList());
+    }
+
     private void updateProductFromDto(Product product, ProductDto productDto) {
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new MonaimException("no such category"));
@@ -91,6 +117,7 @@ public class ProductService {
         List<Product> products = productRepository.findAllByCategory(category);
         return products.stream().map(productMapper::mapToDto).collect(Collectors.toList());
     }
+
 
 //    public Product mapToProduct(ProductDto productDto){
 //        Category category = categoryRepository.findById(productDto.getCategoryId())
