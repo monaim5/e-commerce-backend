@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,7 +21,7 @@ public class Category implements Serializable {
     private String icon;
     private String photo;
     @OneToMany(mappedBy = "category")
-    private Collection<Product> products;
+    private List<Product> products;
 
 
 }

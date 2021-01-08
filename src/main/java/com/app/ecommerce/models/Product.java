@@ -18,7 +18,7 @@ public class Product implements Serializable {
     private String name;
     private String description;
     private String designation;
-//    private float rate;
+    private float rate;
     private double price;
     private int quantity;
     private int sales;
@@ -27,5 +27,6 @@ public class Product implements Serializable {
     private List<Photo> photos;
     @ManyToOne
     private Category category;
-
+    @ManyToOne
+    private Promo promo;
 }

@@ -6,7 +6,6 @@ import com.app.ecommerce.dto.ProductDto;
 import com.app.ecommerce.exceptions.MonaimException;
 import com.app.ecommerce.mappers.ProductMapper;
 import com.app.ecommerce.models.Category;
-import com.app.ecommerce.models.Photo;
 import com.app.ecommerce.models.Product;
 import com.app.ecommerce.repositories.CategoryRepository;
 import com.app.ecommerce.repositories.PhotoRepository;
@@ -14,20 +13,12 @@ import com.app.ecommerce.repositories.ProductRepository;
 import com.app.ecommerce.specifications.ProductSpecification;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -112,36 +103,9 @@ public class ProductService {
         product.setCategory(category);
     }
 
-    public List<ProductDto> listByCategory(String categoryName) {
-        Category category = categoryRepository.findByNameEquals(categoryName);
-        List<Product> products = productRepository.findAllByCategory(category);
-        return products.stream().map(productMapper::mapToDto).collect(Collectors.toList());
-    }
-
-
-//    public Product mapToProduct(ProductDto productDto){
-//        Category category = categoryRepository.findById(productDto.getCategoryId())
-//                .orElseThrow(() -> new MonaimException("no such category"));
-//        return Product.builder()
-//                .name(productDto.getName())
-//                .designation(productDto.getDesignation())
-//                .description(productDto.getDescription())
-//                .price(productDto.getPrice())
-//                .quantity(productDto.getQuantity())
-//                .category(category)
-//                .build();
-//    }
-
-//    private ProductDto mapToDto(Product product) {
-//        List<PhotoDto> photos = product.getPhotos().stream().map(
-//                PhotoService::mapToDto).collect(Collectors.toList());
-//
-//        return ProductDto.builder()
-//                .id(product.getId())
-//                .name(product.getName())
-//                .designation(product.getDesignation())
-//                .categoryId(product.getCategory().getId())
-//                .photos(photos)
-//                .build();
+//    public List<ProductDto> listByCategory(String categoryName) {
+//        Category category = categoryRepository.findByNameEquals(categoryName);
+//        List<Product> products = productRepository.findAllByCategory(category);
+//        return products.stream().map(productMapper::mapToDto).collect(Collectors.toList());
 //    }
 }

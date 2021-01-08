@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.nio.file.Path;
-import java.util.Collection;
 
 @Entity
 @Data
