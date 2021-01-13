@@ -7,14 +7,15 @@ import com.app.ecommerce.models.Photo;
 import com.app.ecommerce.models.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+
+    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
     @Mapping(target = "id", source = "productDto.id")
     @Mapping(target = "name", source = "productDto.name")

@@ -1,19 +1,27 @@
 package com.app.ecommerce.models;
 
+import lombok.*;
+
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+@Data
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Promo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date startDate;
-    private Date endDate;
+    private String title;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private float discountAmount;
     private boolean active;
     @ManyToOne
-    private PromoType type;
+    private PromoType promoType;
+
     @OneToMany(mappedBy = "promo")
     private List<Product> products;
 }

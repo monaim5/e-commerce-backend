@@ -17,6 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     List<Product> findAllByCategory(Category category);
 
+    List<Product> findAllByIdIn(List<Long> productIds);
+
 //    @Query("select p from Product where p.category")
 //    List<Product> findBySpecification(
 //            @Param("category") Category category,

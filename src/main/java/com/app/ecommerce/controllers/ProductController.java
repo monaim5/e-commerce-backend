@@ -1,9 +1,6 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.PhotoDto;
 import com.app.ecommerce.dto.ProductDto;
-import com.app.ecommerce.models.Photo;
-import com.app.ecommerce.services.PhotoService;
 import com.app.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +20,6 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
-    private final PhotoService photoService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> retrieveProduct(@PathVariable Long id){
@@ -31,21 +27,15 @@ public class ProductController {
                 .body(productService.retrieve(id));
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<ProductDto>> listProductsByCategory(@RequestParam("category") String categoryName){
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(productService.listByCategory(categoryName));
-//    }
-
     @GetMapping
     public ResponseEntity<List<ProductDto>> listProducts(
-            @RequestParam(value = "name") Optional<String> name,
+            @RequestParam(value = "q") Optional<String> nameLike,
             @RequestParam(value = "category") Optional<String> category,
             @RequestParam(value = "page") Optional<Integer> page,
             @RequestParam(value = "pageSize") Optional<Integer> pageSize,
             @RequestParam(value = "sortBy") Optional<String> sortBy
     ) {
-        List<ProductDto> productList = productService.list(name, category, page, pageSize, sortBy);
+        List<ProductDto> productList = productService.list(nameLike, category, page, pageSize, sortBy);
 
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
@@ -61,11 +51,6 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws IOException {
         ProductDto newProductDto = productService.create(productDto);
-//        System.out.println(productDto.getPhotos());
-//        List<PhotoDto> photoDtos = productDto.getPhotos();
-//
-//        photoDtos = photoService.updatePhotos(photoDtos, newProductDto);
-//        newProductDto.setPhotos(photoDtos);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(newProductDto);
     }

@@ -1,14 +1,22 @@
 package com.app.ecommerce.dto;
 
-import com.app.ecommerce.models.PromoType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
 public class PromoDto {
     private Long id;
-    private Date startDate;
-    private Date endDate;
+    private String title;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private float discountAmount;
     private boolean active;
-    private PromoType type;
+    private String promoType;
+    private List<ProductDto> products;
 }

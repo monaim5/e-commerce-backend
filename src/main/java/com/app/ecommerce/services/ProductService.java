@@ -54,6 +54,7 @@ public class ProductService {
         return productDto;
     }
 
+    @Transactional(readOnly = true)
     public ProductDto retrieve(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new MonaimException("Product not found for this id :: " + id));
