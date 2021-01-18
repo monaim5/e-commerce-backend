@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/promos")
@@ -19,8 +20,11 @@ public class PromoController {
     private final PromoService promoService;
 
     @GetMapping
-    public ResponseEntity<List<PromoDto>> listPromos() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.list());
+    public ResponseEntity<List<PromoDto>> listPromos(
+            @RequestParam("promoType") Optional<String> promoType
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.promoService.list(promoType));
     }
 
     @GetMapping(value = "/types")
@@ -36,6 +40,11 @@ public class PromoController {
     @PostMapping(value = "/types")
     public ResponseEntity<PromoType> createPromoType(@RequestBody PromoType promoType) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.promoService.createPromoType(promoType));
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<PromoDto> updatePromo(@PathVariable("id") Long id, @RequestBody PromoDto promodto) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.update(id, promodto));
     }
 
     @DeleteMapping

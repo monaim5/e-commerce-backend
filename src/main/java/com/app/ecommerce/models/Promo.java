@@ -24,4 +24,13 @@ public class Promo {
 
     @OneToMany(mappedBy = "promo")
     private List<Product> products;
+
+    @OneToMany(mappedBy = "promo", cascade = CascadeType.REMOVE)
+    private List<Photo> banners;
+
+    public void setAndOverrideProducts(List<Product> promoProducts) {
+        this.products.forEach(product -> product.setPromo(null));
+        this.products = promoProducts;
+        this.products.forEach(product -> product.setPromo(this));
+    }
 }

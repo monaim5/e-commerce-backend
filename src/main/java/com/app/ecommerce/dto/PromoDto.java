@@ -19,4 +19,5 @@ public class PromoDto {
     private boolean active;
     private String promoType;
     private List<ProductDto> products;
+    private List<PhotoDto> banners;
 }

@@ -15,18 +15,26 @@ import java.util.List;
 public class Product implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @OneToMany(mappedBy = "product")
+    private List<Photo> photos;
+
+    @ManyToOne
+    private Category category;
+
+    @ManyToOne
+    private Promo promo;
+
+    @OneToMany
+    private List<CartItem> cartItems;
+
+    private String title;
     private String description;
     private String designation;
     private float rate;
-    private double price;
+    private float price;
     private int quantity;
     private int sales;
     private boolean available;
-    @OneToMany(mappedBy = "product")
-    private List<Photo> photos;
-    @ManyToOne
-    private Category category;
-    @ManyToOne
-    private Promo promo;
+
 }
