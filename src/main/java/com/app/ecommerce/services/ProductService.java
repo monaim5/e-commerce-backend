@@ -96,7 +96,7 @@ public class ProductService {
     private void updateProductFromDto(Product product, ProductDto productDto) {
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new MonaimException("no such category"));
-        product.setName(productDto.getName());
+        product.setTitle(productDto.getTitle());
         product.setDescription(productDto.getDescription());
         product.setDesignation(productDto.getDesignation());
         product.setPrice(productDto.getPrice());

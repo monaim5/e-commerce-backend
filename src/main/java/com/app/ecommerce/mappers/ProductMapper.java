@@ -18,7 +18,7 @@ public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
     @Mapping(target = "id", source = "productDto.id")
-    @Mapping(target = "name", source = "productDto.name")
+    @Mapping(target = "title", source = "productDto.title")
     @Mapping(target = "description", source = "productDto.description")
     @Mapping(target = "category", source = "category")
     @Mapping(target = "photos", ignore = true)

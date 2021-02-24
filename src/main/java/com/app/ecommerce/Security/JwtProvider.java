@@ -42,12 +42,12 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("monaim", "user4415".toCharArray());
         } catch (Exception e){
-            throw new MonaimException("exception occured while retrieving public key");
+            throw new MonaimException("exception occurred while retrieving private key");
         }
     }
 
     public boolean validateToken(String jwt) {
-        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJwt(jwt);
+        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
         return true;
     }
 
@@ -55,7 +55,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("monaim").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new MonaimException("failaid to get the private key");
+            throw new MonaimException("failed to get the public key");
         }
     }
 

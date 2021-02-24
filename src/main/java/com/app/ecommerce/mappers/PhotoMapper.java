@@ -17,6 +17,7 @@ public interface PhotoMapper {
 
     @Mapping(target = "path", ignore = true)
     @Mapping(target = "id", source = "photoDto.id")
+    @Mapping(target = "title", source = "photoDto.id")
     Photo mapToPhoto(PhotoDto photoDto, Product product);
 
     @Mapping(target = "path", expression = "java(getUri(resource))")
