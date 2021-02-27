@@ -2,8 +2,10 @@ package com.app.ecommerce.controllers;
 
 import com.app.ecommerce.dto.AuthenticationResponse;
 import com.app.ecommerce.dto.LoginRequest;
+import com.app.ecommerce.dto.RefreshTokenRequest;
 import com.app.ecommerce.dto.RegisterRequest;
 import com.app.ecommerce.services.AuthService;
+import com.app.ecommerce.services.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @CrossOrigin("http://localhost:4200")
     @PostMapping("/signup")
@@ -34,5 +37,15 @@ public class AuthController {
     @PostMapping("/signin")
     public AuthenticationResponse signin(@RequestBody LoginRequest loginRequest){
         return authService.signin(loginRequest);
+    }
+
+    @PostMapping("/refreshToken")
+    public AuthenticationResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return authService.refreshToken(refreshTokenRequest);
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshTokenRequest refreshToken) {
+        refreshTokenService.deleteRefreshToken(refreshToken.getRefreshToken());
     }
 }
