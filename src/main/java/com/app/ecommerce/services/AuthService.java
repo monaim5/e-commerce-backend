@@ -5,6 +5,7 @@ import com.app.ecommerce.dto.AuthenticationResponse;
 import com.app.ecommerce.dto.LoginRequest;
 import com.app.ecommerce.dto.RefreshTokenRequest;
 import com.app.ecommerce.dto.RegisterRequest;
+import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.exceptions.MonaimException;
 import com.app.ecommerce.models.NotificationEmail;
 import com.app.ecommerce.models.User;
@@ -60,6 +61,7 @@ public class AuthService {
                 loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
+        System.out.println(token);
 
         return AuthenticationResponse.builder()
                 .username(loginRequest.getEmail())
@@ -80,7 +82,7 @@ public class AuthService {
 
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        verificationToken.orElseThrow(() -> new MonaimException("invalid token"));
+        verificationToken.orElseThrow(() -> new AuthorizationException("invalid token"));
         fetchUserAndEnable(verificationToken.get());
         verificationTokenRepository.delete(verificationToken.get());
     }

@@ -1,6 +1,8 @@
 package com.app.ecommerce.Security;
 
-import com.app.ecommerce.exceptions.MonaimException;
+import com.app.ecommerce.exceptions.AuthorizationException;
+import com.app.ecommerce.exceptions.ExpiredSessionException;
+import com.app.ecommerce.exceptions.InternalException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +37,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/monaim_key.jks");
             keyStore.load(resourceAsStream, "user4415".toCharArray());
         } catch (Exception e) {
-            throw new MonaimException("exception occurred while loading keystore");
+            throw new InternalException("exception occurred while loading keystore");
         }
     }
 
@@ -57,12 +59,19 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("monaim", "user4415".toCharArray());
         } catch (Exception e){
-            throw new MonaimException("exception occurred while retrieving private key");
+            throw new InternalException("exception occurred while retrieving private key");
         }
     }
 
     public boolean validateToken(String jwt) {
-        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+        try {
+            System.out.println("i am here one");
+            Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+            System.out.println("i am here two");
+        } catch (Exception e) {
+            System.out.println("i am here three");
+            throw new AuthorizationException(e.getMessage());
+        }
         return true;
     }
 
@@ -70,7 +79,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("monaim").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new MonaimException("failed to get the public key");
+            throw new InternalException("failed to get the public key");
         }
     }
 

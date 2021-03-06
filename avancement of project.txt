@@ -1,0 +1,8 @@
+05/03/2021 17:37
+I have to complete the process of jwt; now I'm working on frontend i have to fix the problems in the cookies storage
+the problem is that the client receive authenticationResponse as a string
+because in specified the response type in the apiService for post method as {responseType: 'text'}
+
+05/03/2021 19:40
+trying to find the best practice for handling exceptions:
+i find a way which is using an exception handler using @ControllerAdvice

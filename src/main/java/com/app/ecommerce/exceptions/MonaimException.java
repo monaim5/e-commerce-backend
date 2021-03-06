@@ -1,8 +1,7 @@
 package com.app.ecommerce.exceptions;
 
 public class MonaimException extends RuntimeException {
-    public MonaimException(String s) {
-        super(s);
-        System.out.println(s);
+    public MonaimException(String message) {
+        super(message);
     }
 }

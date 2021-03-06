@@ -7,7 +7,7 @@ public class ProductSpecification {
     public static Specification<Product> nameLike(String name) {
         return ((root, criteriaQuery, criteriaBuilder) -> (name == null) ?
                 criteriaBuilder.conjunction() :
-                criteriaBuilder.like(root.get("name"), "%" + name + "%")
+                criteriaBuilder.like(root.get("title"), "%" + name + "%")
         );
     }
 

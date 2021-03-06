@@ -1,6 +1,8 @@
 package com.app.ecommerce.controllers;
 
+import com.app.ecommerce.dto.CartItemDto;
 import com.app.ecommerce.dto.ProductDto;
+import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +38,6 @@ public class ProductController {
             @RequestParam(value = "sortBy") Optional<String> sortBy
     ) {
         List<ProductDto> productList = productService.list(nameLike, category, page, pageSize, sortBy);
-
-
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
@@ -55,6 +55,11 @@ public class ProductController {
             .body(newProductDto);
     }
 
+    @PostMapping("/{id}/addToCart")
+    public ResponseEntity<String> addToCart(@RequestBody CartItemDto cartItem, @PathVariable String id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body("added");
+    }
     @DeleteMapping
     public ResponseEntity<Long> removeProduct(@RequestParam("id") Long id){
         productService.destroy(id);

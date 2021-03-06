@@ -4,12 +4,14 @@ import com.app.ecommerce.dto.AuthenticationResponse;
 import com.app.ecommerce.dto.LoginRequest;
 import com.app.ecommerce.dto.RefreshTokenRequest;
 import com.app.ecommerce.dto.RegisterRequest;
+import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.services.AuthService;
 import com.app.ecommerce.services.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,20 +30,20 @@ public class AuthController {
 
     @CrossOrigin("*")
     @GetMapping("/accountVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token){
+    public ResponseEntity<String> verifyAccount(@PathVariable String token) throws AuthorizationException {
         authService.verifyAccount(token);
         return new ResponseEntity<>("account activated successfully", HttpStatus.OK);
     }
 
     @CrossOrigin
     @PostMapping("/signin")
-    public AuthenticationResponse signin(@RequestBody LoginRequest loginRequest){
-        return authService.signin(loginRequest);
+    public ResponseEntity<AuthenticationResponse> signin(@RequestBody LoginRequest loginRequest) throws AuthorizationException {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.signin(loginRequest));
     }
 
     @PostMapping("/refreshToken")
-    public AuthenticationResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return authService.refreshToken(refreshTokenRequest);
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.refreshToken(refreshTokenRequest));
     }
 
     @PostMapping("/logout")

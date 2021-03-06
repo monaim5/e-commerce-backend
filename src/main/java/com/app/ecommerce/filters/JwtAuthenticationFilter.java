@@ -1,5 +1,8 @@
-package com.app.ecommerce.Security;
+package com.app.ecommerce.filters;
 
+import com.app.ecommerce.Security.JwtProvider;
+import com.app.ecommerce.exceptions.AuthorizationException;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         filterChain.doFilter(httpServletRequest, httpServletResponse);
 
     }

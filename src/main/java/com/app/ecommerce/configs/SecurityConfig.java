@@ -1,6 +1,7 @@
 package com.app.ecommerce.configs;
 
-import com.app.ecommerce.Security.JwtAuthenticationFilter;
+import com.app.ecommerce.filters.JwtAuthenticationFilter;
+import com.app.ecommerce.filters.FilterChainExceptionHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,8 @@ import java.util.List;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthenticationFiler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -44,13 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("**")
-                .antMatchers("/api/auth/**")
-                .permitAll()
-                .antMatchers("/api/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated();
-        httpSecurity.addFilterBefore(jwtAuthenticationFiler, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/photos/**").permitAll()
+                .anyRequest().authenticated();
+
+//                .antMatchers("/api/**")
+//                .permitAll()
+
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(filterChainExceptionHandler, JwtAuthenticationFilter.class);
     }
 
     @Bean
