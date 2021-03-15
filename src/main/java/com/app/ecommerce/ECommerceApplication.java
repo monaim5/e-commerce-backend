@@ -19,12 +19,12 @@ import java.util.*;
 @EnableAsync
 public class ECommerceApplication {
 
-	@Autowired
-	private ProductRepository productRepository;
-	@Autowired
-	private CategoryRepository categoryRepository;
-	@Autowired
-	private PhotoRepository photoRepository;
+//	@Autowired
+//	private ProductRepository productRepository;
+//	@Autowired
+//	private CategoryRepository categoryRepository;
+//	@Autowired
+//	private PhotoRepository photoRepository;
 
 
 	public static void main(String[] args) {

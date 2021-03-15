@@ -9,13 +9,13 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface FileStorageService {
-    public void init() throws IOException;
+    void init() throws IOException;
 
-    public void save(MultipartFile file, String fileName) throws IOException;
+    void save(MultipartFile file, String fileName) throws IOException;
 
-    public Resource load(String filename) throws MalformedURLException;
+    Resource load(String filename) throws MalformedURLException;
 
-    public void deleteAll();
+    void deleteAll();
 
-    public Stream<Path> loadAll();
+    Stream<Path> loadAll();
 }
