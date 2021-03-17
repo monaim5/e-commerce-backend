@@ -32,7 +32,7 @@ public class PhotoService {
 
     public PhotoDto create(PhotoDto photoDto, Resource resource) throws IOException {
         Photo photo = photoRepository.save(photoMapper.mapToPhoto(photoDto, resource));
-        return photoMapper.mapToDto(photo);
+        return photoMapper.toDto(photo);
     }
 
     public List<PhotoDto> updatePhotos(List<PhotoDto> photoDtos, ProductDto productDto) {
@@ -40,7 +40,7 @@ public class PhotoService {
         return photoDtos.stream().map(photoDto -> {
             Photo photo = photoRepository.findById(photoDto.getId()).orElseThrow(() -> new MonaimException("cant get photo"));
             photo.setProduct(product);
-            return photoMapper.mapToDto(photoRepository.save(photo));
+            return photoMapper.toDto(photoRepository.save(photo));
         }).collect(Collectors.toList());
     }
 

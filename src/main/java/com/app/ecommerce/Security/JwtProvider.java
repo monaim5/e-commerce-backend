@@ -1,7 +1,6 @@
 package com.app.ecommerce.Security;
 
 import com.app.ecommerce.exceptions.AuthorizationException;
-import com.app.ecommerce.exceptions.ExpiredSessionException;
 import com.app.ecommerce.exceptions.InternalException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

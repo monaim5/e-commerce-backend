@@ -13,9 +13,6 @@ import com.app.ecommerce.repositories.PromoRepository;
 import com.app.ecommerce.repositories.PromoTypeRepository;
 import com.app.ecommerce.specifications.PromoSpecification;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +35,7 @@ public class PromoService {
         Specification<Promo> specification = Specification.where(promoTypeSpec);
 
         return this.promoRepository.findAll(specification)
-                .stream().map(promoMapper::mapToDto).collect(Collectors.toList());
+                .stream().map(promoMapper::toDto).collect(Collectors.toList());
     }
 
     public PromoDto create(PromoDto promoDto) {

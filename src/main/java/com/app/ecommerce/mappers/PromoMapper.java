@@ -7,29 +7,26 @@ import com.app.ecommerce.models.Photo;
 import com.app.ecommerce.models.Product;
 import com.app.ecommerce.models.Promo;
 import com.app.ecommerce.models.PromoType;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {ProductMapper.class})
 public interface PromoMapper {
 
-    @Mapping(target = "products", expression = "java(mapProductsToDtos(promo.getProducts()))")
-    @Mapping(target = "promoType", expression = "java(promo.getPromoType().getName())")
-    @Mapping(target = "banners", expression = "java(mapPhotosToDtos(promo.getBanners()))")
-    PromoDto mapToDto(Promo promo);
-
-    @Mapping(target = "promoType", source = "promoType")
+    @Mapping(target = "promoType", ignore = true)
     @Mapping(target = "banners", ignore = true)
-    Promo mapToPromo(PromoDto promoDto, PromoType promoType);
+    PromoDto toDto(Promo promo);
 
-    default List<ProductDto> mapProductsToDtos(List<Product> products) {
-        return products.stream().map(ProductMapper.INSTANCE::mapToDto).collect(Collectors.toList());
-    }
+    @Named("toFlatPromoDto")
+    @Mapping(target = "products", ignore = true)
+    @Mapping(target = "promoType", ignore = true)
+    @Mapping(target = "banners", ignore = true)
+    PromoDto toFlatDto(Promo promo);
 
-    default List<PhotoDto> mapPhotosToDtos(List<Photo> banners) {
-        return banners.stream().map(PhotoMapper.INSTANCE::mapToDto).collect(Collectors.toList());
-    }
 }

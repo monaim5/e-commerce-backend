@@ -39,7 +39,7 @@ public class ProductService {
                 .orElseThrow(() -> new MonaimException("no such category"));
 
         List<Long> photoIds = productDto.getPhotos().stream().map(PhotoDto::getId).collect(Collectors.toList());
-        Product product = productRepository.save(productMapper.mapToProduct(productDto, category));
+        Product product = productRepository.save(productMapper.toEntity(productDto, category));
         photoRepository.updateProduct(photoIds, product.getId());
         productDto.setId(product.getId());
         return productDto;
@@ -58,7 +58,7 @@ public class ProductService {
     public ProductDto retrieve(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new MonaimException("Product not found for this id :: " + id));
-        return productMapper.mapToDto(product);
+        return productMapper.toDto(product);
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class ProductService {
     public List<ProductDto> list(){
         return productRepository.findAll()
             .stream()
-            .map(productMapper::mapToDto)
+            .map(productMapper::toDto)
             .collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class ProductService {
                 PageRequest.of(page.orElse(0), pageSize.orElse(50),
                         Sort.Direction.DESC, sortBy.orElse("id")))
                 .getContent()
-                .stream().map(productMapper::mapToDto).collect(Collectors.toList());
+                .stream().map(productMapper::toDto).collect(Collectors.toList());
     }
 
     private void updateProductFromDto(Product product, ProductDto productDto) {

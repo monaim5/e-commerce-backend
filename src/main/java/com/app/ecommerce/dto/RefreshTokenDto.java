@@ -5,19 +5,17 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import java.time.Instant;
 
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PhotoDto {
+public class RefreshTokenDto {
 	private Long id;
-	private String title;
-	private String path;
-	private String url;
-	private ProductDto product;
-	private PromoDto promo;
+	private String token;
+	private Instant createdAt;
 
 
 }

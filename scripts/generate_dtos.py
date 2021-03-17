@@ -13,15 +13,40 @@ from typing import List, Optional, Set
 #        attributes = get_attributes(cls)
 
 
-def get_all_models() -> List[Path]:
-    return [model for model in models_path.glob('*.java')]
+def get_all_java_files() -> List[Path]:
+    return [file for file in models_path.glob('*.java')]
 
 
-ALL_MODELS_PATH = get_all_models()
+def inspect_java_files(files: List[Path]):
+    models = []
+    enums = []
+    normal_classes = []
 
-ALL_MODELS = [model.stem for model in ALL_MODELS_PATH]
+    model_pattern = re.compile(r'class\s+\D\w+(?:\simplements\s\D\w+)*[\s|\n]*{')
+    enum_pattern = re.compile(r'enum\s+\D\w+(?:\simplements\s\D\w+)*[\s|\n]*{')
 
-DTOS_PACKAGE_NAME = 'dtos'
+    for file in files:
+        with open(file) as f:
+            content = f.read()
+        if model_pattern.search(content):
+            if re.search('@Entity|@Embeddable', content):
+                models.append(file.stem)
+            else:
+                normal_classes.append(file.stem)
+        elif enum_pattern.search(content):
+            enums.append(file.stem)
+
+    return models, enums, normal_classes
+
+
+ALL_MODELS_PATH = get_all_java_files()
+
+ALL_MODELS, ALL_ENUMS, ALL_NORMAL_CLASSES = inspect_java_files(ALL_MODELS_PATH)
+print(ALL_MODELS)
+print(ALL_ENUMS)
+print(ALL_NORMAL_CLASSES)
+
+DTOS_PACKAGE_NAME = 'dto_test'
 
 DTO_STATIC_DEPENDENCIES = [
     'lombok.Data',
@@ -48,6 +73,8 @@ JAVA_BUILTIN_TYPES = [
     'boolean',
 ]
 
+TARGET_PACKAGE = 'dto_test'
+
 
 class ClassNotFoundException(Exception):
     def __init__(self):
@@ -61,10 +88,14 @@ class Dto:
         self.class_: Class = Class(None, DTO_CLASS_STATIC_ANNOTATIONS)
         self.attributes: List[Attribute] = []
 
+        self.target_package_endpoint = TARGET_PACKAGE
+
     def _resolve_attr_dependencies(self):
         for att in self.attributes:
             if att.attribute_type.packages:
-                self.dependencies.extend([pck for pck in att.attribute_type.packages if pck not in self.dependencies])
+                self.dependencies.extend(
+                    [pck for pck in att.attribute_type.packages
+                     if pck not in self.dependencies])
 
     def text(self):
         self._resolve_attr_dependencies()
@@ -114,9 +145,6 @@ class Package(MyBase):
     def text(self):
         return f'package {self.package_name};\n\n\n'
 
-    def to_dto(self):
-        return self.parent.join(DTOS_PACKAGE_NAME)
-
 
 class Dependency(MyBase):
     def __init__(self, dependency):
@@ -163,8 +191,13 @@ class Attribute(MyBase):
         attr = Attribute(self.attribute_name, self.attribute_type)
         if attr.attribute_type.type_name in ALL_MODELS:
             attr.attribute_type.type_name += DTO_PREFIX
+        elif attr.attribute_type.type_name in ALL_MODELS or attr.attribute_type.type_name in ALL_NORMAL_CLASSES:
+            attr.attribute_type.packages.extend([MODELS_PACKAGE.join(self.attribute_name)])
+
         if attr.attribute_type.data_type in ALL_MODELS:
             attr.attribute_type.data_type += DTO_PREFIX
+        elif attr.attribute_type.data_type in ALL_MODELS or attr.attribute_type.data_type in ALL_NORMAL_CLASSES:
+            attr.attribute_type.packages.extend([MODELS_PACKAGE.join(self.attribute_name)])
 
         return attr
 
@@ -182,6 +215,9 @@ class Type(MyBase):
         return f'{self.type_name}{"<" + self.data_type + ">" if self.data_type else ""}'
 
 
+MODELS_PACKAGE = Package('com.app.ecommerce.models')
+
+
 def get_package(cls) -> Package:
     """returns package as a string"""
     return Package(re.search(r'^package\s+([^;]+)', cls).group(1))
@@ -197,7 +233,7 @@ def get_class_name(cls) -> Class:
     annotations = re.search(r'@.*class', cls, re.DOTALL)
     annotations_list = re.findall(r'@\b(\D\w+)\b', annotations.group()) if annotations else None
     class_ = re.search(r'class\s+(\D\w+)(?:\simplements\s(\D\w+))*[\s|\n]*{', cls)
-    if class_:
+    if class_ and ('Entity' in annotations_list or 'Embeddable' in annotations_list):
         return Class(class_.group(1), annotations_list)
     else:
         raise ClassNotFoundException()
@@ -231,7 +267,7 @@ def generate_dto(cls):
         raise ClassNotFoundException()
 
     dto = Dto()
-    dto.package = get_package(cls).to_dto()
+    dto.package = get_package(cls).parent.join(DTOS_PACKAGE_NAME)
     dto.class_ = class_info
 
     attributes = [att.to_dto() for att in get_attributes(cls)]

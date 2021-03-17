@@ -1,34 +1,30 @@
 package com.app.ecommerce.mappers;
 
-import com.app.ecommerce.dto.PhotoDto;
 import com.app.ecommerce.dto.ProductDto;
 import com.app.ecommerce.models.Category;
-import com.app.ecommerce.models.Photo;
 import com.app.ecommerce.models.Product;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {PhotoMapper.class, PromoMapper.class})
 public interface ProductMapper {
 
-    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
+    @Mapping(target = "promo", qualifiedByName = "toFlatPromoDto")
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "cartItems", ignore = true)
+    ProductDto toDto(Product product);
 
-    @Mapping(target = "id", source = "productDto.id")
-    @Mapping(target = "title", source = "productDto.title")
-    @Mapping(target = "description", source = "productDto.description")
-    @Mapping(target = "category", source = "category")
+    @Named("toFlatProductDto")
     @Mapping(target = "photos", ignore = true)
-    Product mapToProduct(ProductDto productDto, Category category);
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "promo", ignore = true)
+    @Mapping(target = "cartItems", ignore = true)
+    ProductDto toFlatDto(Product product);
 
-    @Mapping(target = "photos", expression = "java(mapPhotosToDtos(product.getPhotos()))")
-    @Mapping(target = "categoryId", expression = "java(product.getCategory().getId())")
-    ProductDto mapToDto(Product product);
+    @IterableMapping(qualifiedByName = "toFlatProductDto")
+    List<ProductDto> toDtoList(List<Product> products);
 
-    default List<PhotoDto> mapPhotosToDtos(List<Photo> photos) {
-        return photos.stream().map(PhotoMapper.INSTANCE::mapToDto).collect(Collectors.toList());
-    }
 }

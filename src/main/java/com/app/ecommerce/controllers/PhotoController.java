@@ -30,7 +30,7 @@ public class PhotoController {
     }
 
     @PostMapping
-    public ResponseEntity<PhotoDto> uploadPhoto(@ModelAttribute PhotoDto photoDto) throws IOException {
+    public ResponseEntity<PhotoDto> uploadPhoto(@ModelAttribute PhotoDto photoDto) throws IOException, InterruptedException {
         Resource resource = photoStorageService.save(photoDto.getFile());
         photoDto = photoService.create(photoDto, resource);
         return ResponseEntity.status(HttpStatus.CREATED).body(photoDto);

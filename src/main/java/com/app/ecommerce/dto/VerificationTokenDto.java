@@ -11,13 +11,10 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PhotoDto {
+public class VerificationTokenDto {
 	private Long id;
-	private String title;
-	private String path;
-	private String url;
-	private ProductDto product;
-	private PromoDto promo;
+	private String token;
+	private UserDto user;
 
 
 }
