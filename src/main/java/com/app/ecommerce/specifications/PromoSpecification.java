@@ -1,7 +1,7 @@
 package com.app.ecommerce.specifications;
 
-import com.app.ecommerce.models.Product;
-import com.app.ecommerce.models.Promo;
+import com.app.ecommerce.models.entities.Product;
+import com.app.ecommerce.models.entities.Promo;
 import org.springframework.data.jpa.domain.Specification;
 
 public class PromoSpecification {

@@ -16,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.List;
 
@@ -46,8 +49,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("**")
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/photos/**").permitAll()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+                ).permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
 
 //                .antMatchers("/api/**")

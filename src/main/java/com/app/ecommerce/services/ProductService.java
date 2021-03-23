@@ -1,12 +1,12 @@
 package com.app.ecommerce.services;
 
 
-import com.app.ecommerce.dto.PhotoDto;
-import com.app.ecommerce.dto.ProductDto;
+import com.app.ecommerce.models.dtos.PhotoDto;
+import com.app.ecommerce.models.dtos.ProductDto;
 import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.mappers.ProductMapper;
-import com.app.ecommerce.models.Category;
-import com.app.ecommerce.models.Product;
+import com.app.ecommerce.models.mappers.ProductMapper;
+import com.app.ecommerce.models.entities.Category;
+import com.app.ecommerce.models.entities.Product;
 import com.app.ecommerce.repositories.CategoryRepository;
 import com.app.ecommerce.repositories.PhotoRepository;
 import com.app.ecommerce.repositories.ProductRepository;
@@ -35,12 +35,21 @@ public class ProductService {
 
     @Transactional
     public ProductDto create(ProductDto productDto){
-        Category category = categoryRepository.findById(productDto.getCategoryId())
-                .orElseThrow(() -> new MonaimException("no such category"));
+        Category category = categoryRepository.findById(
+                productDto.getCategory().getId()
+        ).orElseThrow(() -> new MonaimException("no such category"));
 
         List<Long> photoIds = productDto.getPhotos().stream().map(PhotoDto::getId).collect(Collectors.toList());
-        Product product = productRepository.save(productMapper.mapToProduct(productDto, category));
-        photoRepository.updateProduct(photoIds, product.getId());
+
+        // Product product = productRepository.save(productMapper.toEntity(productDto, category));
+        Product product = productMapper.toEntity(productDto);
+        product.setCategory(category);
+        product = productRepository.save(product);
+
+        // maybe make photoId readOnly in database
+        // photo data came from storage service
+        productRepository.setPhotos(product.getId(), photoIds);
+        // photoRepository.updateProduct(photoIds, product.getId());
         productDto.setId(product.getId());
         return productDto;
     }
@@ -58,7 +67,7 @@ public class ProductService {
     public ProductDto retrieve(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new MonaimException("Product not found for this id :: " + id));
-        return productMapper.mapToDto(product);
+        return productMapper.toDto(product);
     }
 
     @Transactional
@@ -70,7 +79,7 @@ public class ProductService {
     public List<ProductDto> list(){
         return productRepository.findAll()
             .stream()
-            .map(productMapper::mapToDto)
+            .map(productMapper::toDto)
             .collect(Collectors.toList());
     }
 
@@ -85,21 +94,22 @@ public class ProductService {
         Specification<Product> categorySpec = ProductSpecification.categoryEquals(categoryName.orElse(null));
 
         Specification<Product> specification = Specification.where(nameSpec).and(categorySpec);
+
         return productRepository.findAll(
                 specification,
                 PageRequest.of(page.orElse(0), pageSize.orElse(50),
                         Sort.Direction.DESC, sortBy.orElse("id")))
                 .getContent()
-                .stream().map(productMapper::mapToDto).collect(Collectors.toList());
+                .stream().map(productMapper::toDto).collect(Collectors.toList());
     }
 
     private void updateProductFromDto(Product product, ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.getCategoryId())
+        Category category = categoryRepository.findById(productDto.getCategory().getId())
                 .orElseThrow(() -> new MonaimException("no such category"));
         product.setTitle(productDto.getTitle());
         product.setDescription(productDto.getDescription());
         product.setDesignation(productDto.getDesignation());
-        product.setPrice(productDto.getPrice());
+        product.setNetPrice(productDto.getNetPrice());
         product.setQuantity(productDto.getQuantity());
         product.setCategory(category);
     }

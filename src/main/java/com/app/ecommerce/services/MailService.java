@@ -2,7 +2,7 @@ package com.app.ecommerce.services;
 
 
 import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.models.NotificationEmail;
+import com.app.ecommerce.models.structure.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

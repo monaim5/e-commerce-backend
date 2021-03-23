@@ -1,7 +1,7 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.CartItemDto;
-import com.app.ecommerce.dto.ProductDto;
+import com.app.ecommerce.models.dtos.CartItemDto;
+import com.app.ecommerce.models.dtos.ProductDto;
 import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;

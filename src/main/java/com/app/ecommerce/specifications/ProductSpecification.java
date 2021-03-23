@@ -1,6 +1,6 @@
 package com.app.ecommerce.specifications;
 
-import com.app.ecommerce.models.Product;
+import com.app.ecommerce.models.entities.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecification {

@@ -1,15 +1,15 @@
 package com.app.ecommerce.services;
 
 import com.app.ecommerce.Security.JwtProvider;
-import com.app.ecommerce.dto.AuthenticationResponse;
-import com.app.ecommerce.dto.LoginRequest;
-import com.app.ecommerce.dto.RefreshTokenRequest;
-import com.app.ecommerce.dto.RegisterRequest;
+import com.app.ecommerce.models.dtos.AuthenticationResponse;
+import com.app.ecommerce.models.dtos.LoginRequest;
+import com.app.ecommerce.models.dtos.RefreshTokenRequest;
+import com.app.ecommerce.models.dtos.RegisterRequest;
 import com.app.ecommerce.exceptions.AuthorizationException;
-import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.models.NotificationEmail;
-import com.app.ecommerce.models.User;
-import com.app.ecommerce.models.VerificationToken;
+import com.app.ecommerce.models.entities.User;
+import com.app.ecommerce.models.enums.UserStatus;
+import com.app.ecommerce.models.structure.NotificationEmail;
+import com.app.ecommerce.models.structure.VerificationToken;
 import com.app.ecommerce.repositories.UserRepository;
 import com.app.ecommerce.repositories.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,8 +42,8 @@ public class AuthService {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRegisteredAt(Instant.now());
-        user.setEnabled(false);
+//        user.setCreationDate(Instant.now());
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
 
         String token = generateVerificationToken(user);
@@ -90,7 +89,7 @@ public class AuthService {
     @Transactional
     public void fetchUserAndEnable(VerificationToken verificationToken){
         User user = verificationToken.getUser();
-        user.setEnabled(true);
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
     }
 

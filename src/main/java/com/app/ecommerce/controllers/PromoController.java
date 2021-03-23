@@ -1,8 +1,9 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.PromoDto;
-import com.app.ecommerce.dto.PromoTypeDto;
-import com.app.ecommerce.models.PromoType;
+import com.app.ecommerce.models.dtos.ProductDto;
+import com.app.ecommerce.models.dtos.PromoDto;
+import com.app.ecommerce.models.dtos.PromoTypeDto;
+import com.app.ecommerce.models.entities.PromoType;
 import com.app.ecommerce.services.PromoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class PromoController {
 
     private final PromoService promoService;
 
+    // ------------------------ GET ------------------------
     @GetMapping
     public ResponseEntity<List<PromoDto>> listPromos(
             @RequestParam("promoType") Optional<String> promoType
@@ -32,6 +34,25 @@ public class PromoController {
         return ResponseEntity.status(HttpStatus.OK).body(this.promoService.listPromoTypes());
     }
 
+    @GetMapping(value = "/{promoId}/products")
+    public ResponseEntity<List<ProductDto>> listPromoProducts(@PathVariable("promoId") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(promoService.listPromoProducts(id));
+    }
+
+    // ------------------------ PUT ------------------------
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PromoDto> updatePromo(@PathVariable("id") Long id, @RequestBody PromoDto promodto) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.update(id, promodto));
+    }
+
+//    @PutMapping(value = "/{promoId}/products")
+//    public ResponseEntity<List<ProductDto>> updatePromoProducts(@PathVariable("promoId") Long id) {
+//
+//    }
+
+    // ------------------------ POST ------------------------
+
     @PostMapping
     public ResponseEntity<PromoDto> createPromo(@RequestBody PromoDto promoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.promoService.create(promoDto));
@@ -41,11 +62,8 @@ public class PromoController {
     public ResponseEntity<PromoType> createPromoType(@RequestBody PromoType promoType) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.promoService.createPromoType(promoType));
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<PromoDto> updatePromo(@PathVariable("id") Long id, @RequestBody PromoDto promodto) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.update(id, promodto));
-    }
+
+    // ------------------------ DELETE ------------------------
 
     @DeleteMapping
     public ResponseEntity<Long> destroyPromo(@RequestParam("id") Long id) {
@@ -54,7 +72,8 @@ public class PromoController {
     }
 
     @DeleteMapping("/types")
-    public ResponseEntity<String> destroyPromoType(@RequestParam("id") String name) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.destroyPromoType(name));
+    public ResponseEntity<String> destroyPromoType(@RequestParam("id") Long promoTypeId) {
+        this.promoService.destroyPromoType(promoTypeId);
+        return ResponseEntity.status(HttpStatus.OK).body("deleted");
     }
 }

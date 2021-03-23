@@ -1,6 +1,6 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.CategoryDto;
+import com.app.ecommerce.models.dtos.CategoryDto;
 import com.app.ecommerce.services.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

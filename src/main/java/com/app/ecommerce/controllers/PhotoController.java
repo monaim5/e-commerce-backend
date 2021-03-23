@@ -1,6 +1,7 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.PhotoDto;
+import com.app.ecommerce.models.dtos.FileDto;
+import com.app.ecommerce.models.dtos.PhotoDto;
 import com.app.ecommerce.services.PhotoService;
 import com.app.ecommerce.services.PhotoStorageService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +24,9 @@ public class PhotoController {
     public final static String baseUrl = "http://localhost:8080/api/photos/";
     private final PhotoService photoService;
     private final PhotoStorageService photoStorageService;
+    private final RestTemplate restTemplate;
+
+    private static final String STORAGE_SERVICE_ENDPOINT = "http://localhost:8081";
 
 
     @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -30,10 +35,13 @@ public class PhotoController {
     }
 
     @PostMapping
-    public ResponseEntity<PhotoDto> uploadPhoto(@ModelAttribute PhotoDto photoDto) throws IOException {
-        Resource resource = photoStorageService.save(photoDto.getFile());
-        photoDto = photoService.create(photoDto, resource);
-        return ResponseEntity.status(HttpStatus.CREATED).body(photoDto);
+    public ResponseEntity<FileDto.Response> uploadPhoto(@ModelAttribute FileDto.Request fileDto) throws IOException {
+        ResponseEntity<FileDto.Response> response = restTemplate.postForEntity(STORAGE_SERVICE_ENDPOINT, fileDto, FileDto.Response.class);
+        FileDto.Response savedFile = response.getBody();
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedFile);
+//        Resource resource = photoStorageService.save(photoDto.getFile());
+//        photoDto = photoService.create(photoDto, resource);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(photoDto);
     }
 
     @DeleteMapping

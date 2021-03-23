@@ -1,11 +1,11 @@
 package com.app.ecommerce.services;
 
-import com.app.ecommerce.dto.PhotoDto;
-import com.app.ecommerce.dto.ProductDto;
+import com.app.ecommerce.models.dtos.PhotoDto;
+import com.app.ecommerce.models.dtos.ProductDto;
 import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.mappers.PhotoMapper;
-import com.app.ecommerce.models.Photo;
-import com.app.ecommerce.models.Product;
+import com.app.ecommerce.models.mappers.PhotoMapper;
+import com.app.ecommerce.models.entities.Photo;
+import com.app.ecommerce.models.entities.Product;
 import com.app.ecommerce.repositories.PhotoRepository;
 import com.app.ecommerce.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -31,8 +31,9 @@ public class PhotoService {
     private final String getPhotoUrl = "http://localhost:8080/api/photos/";
 
     public PhotoDto create(PhotoDto photoDto, Resource resource) throws IOException {
-        Photo photo = photoRepository.save(photoMapper.mapToPhoto(photoDto, resource));
-        return photoMapper.mapToDto(photo);
+        Photo photo = photoRepository.save(photoMapper.toEntity(photoDto));
+//        photo.setRessource(resource);
+        return photoMapper.toDto(photo);
     }
 
     public List<PhotoDto> updatePhotos(List<PhotoDto> photoDtos, ProductDto productDto) {
@@ -40,7 +41,7 @@ public class PhotoService {
         return photoDtos.stream().map(photoDto -> {
             Photo photo = photoRepository.findById(photoDto.getId()).orElseThrow(() -> new MonaimException("cant get photo"));
             photo.setProduct(product);
-            return photoMapper.mapToDto(photoRepository.save(photo));
+            return photoMapper.toDto(photoRepository.save(photo));
         }).collect(Collectors.toList());
     }
 

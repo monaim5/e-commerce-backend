@@ -1,7 +1,8 @@
 package com.app.ecommerce.services;
 
 import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.models.User;
+import com.app.ecommerce.models.entities.User;
+import com.app.ecommerce.models.enums.UserStatus;
 import com.app.ecommerce.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +30,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         User user = userOptional.orElseThrow(() -> new MonaimException("no such user"));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), user.isEnabled(),true,
+                user.getEmail(), user.getPassword(), user.getStatus() == UserStatus.ACTIVE,true,
                 true, true, getAuthorities("USER"));
     }
 

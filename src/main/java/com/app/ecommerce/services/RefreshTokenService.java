@@ -1,7 +1,7 @@
 package com.app.ecommerce.services;
 
 import com.app.ecommerce.exceptions.MonaimException;
-import com.app.ecommerce.models.RefreshToken;
+import com.app.ecommerce.models.structure.RefreshToken;
 import com.app.ecommerce.repositories.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class RefreshTokenService {
     public RefreshToken generateRefreshToken() {
         RefreshToken token = new RefreshToken();
         token.setToken(UUID.randomUUID().toString());
-        token.setCreatedAt(Instant.now());
+//        token.setCreatedAt(Instant.now());
         return refreshTokenRepository.save(token);
     }
 

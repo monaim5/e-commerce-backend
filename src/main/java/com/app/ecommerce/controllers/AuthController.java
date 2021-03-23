@@ -1,9 +1,9 @@
 package com.app.ecommerce.controllers;
 
-import com.app.ecommerce.dto.AuthenticationResponse;
-import com.app.ecommerce.dto.LoginRequest;
-import com.app.ecommerce.dto.RefreshTokenRequest;
-import com.app.ecommerce.dto.RegisterRequest;
+import com.app.ecommerce.models.dtos.AuthenticationResponse;
+import com.app.ecommerce.models.dtos.LoginRequest;
+import com.app.ecommerce.models.dtos.RefreshTokenRequest;
+import com.app.ecommerce.models.dtos.RegisterRequest;
 import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.services.AuthService;
 import com.app.ecommerce.services.RefreshTokenService;
@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/auth")
