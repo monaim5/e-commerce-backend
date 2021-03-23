@@ -6,7 +6,7 @@
 package com.app.ecommerce.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.app.ecommerce.models.entities.User;
+import com.app.ecommerce.models.structure.NotificationEmail;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface NotificationEmailRepository extends JpaRepository<NotificationEmail, Long> {
 }

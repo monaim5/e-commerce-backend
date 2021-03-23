@@ -1,7 +1,12 @@
+/**
+ * This class has genearate by ecommerce-mda
+ * Author: monaim
+ */
+
 package com.app.ecommerce.repositories;
 
-import com.app.ecommerce.models.PromoType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.app.ecommerce.models.entities.PromoType;
 
-public interface PromoTypeRepository extends JpaRepository<PromoType, String> {
+public interface PromoTypeRepository extends JpaRepository<PromoType, Long> {
 }

@@ -6,7 +6,7 @@
 package com.app.ecommerce.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.app.ecommerce.models.entities.User;
+import com.app.ecommerce.models.entities.Banner;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface BannerRepository extends JpaRepository<Banner, Long> {
 }
