@@ -11,6 +11,7 @@ import com.app.ecommerce.models.entities.Promo;
 import com.app.ecommerce.models.entities.PromoType;
 import com.app.ecommerce.models.mappers.ProductMapper;
 import com.app.ecommerce.models.mappers.PromoMapper;
+import com.app.ecommerce.models.mappers.PromoTypeMapper;
 import com.app.ecommerce.repositories.PhotoRepository;
 import com.app.ecommerce.repositories.ProductRepository;
 import com.app.ecommerce.repositories.PromoRepository;
@@ -32,6 +33,7 @@ public class PromoService {
     private final ProductRepository productRepository;
     private final PhotoRepository photoRepository;
     private final PromoMapper promoMapper;
+    private final PromoTypeMapper promoTypeMapper;
     private final ProductMapper productMapper;
 
     public List<PromoDto> list(Optional<String> promoType) {
@@ -120,8 +122,10 @@ public class PromoService {
         this.promoRepository.delete(promo);
     }
 
-    public PromoType createPromoType(PromoType promoType){
-        return this.promoTypeRepository.save(promoType);
+    public PromoTypeDto createPromoType(PromoTypeDto promoTypeDto){
+        PromoType promoType = this.promoTypeRepository.save(promoTypeMapper.toEntity(promoTypeDto));
+        promoTypeDto.setId(promoType.getId());
+        return promoTypeDto;
     }
 
     public void destroyPromoType(Long id) {

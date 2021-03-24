@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,9 +35,11 @@ public class PhotoController {
         return Files.readAllBytes(photoStorageService.load(filename).getFile().toPath());
     }
 
-    @PostMapping
-    public ResponseEntity<FileDto.Response> uploadPhoto(@ModelAttribute FileDto.Request fileDto) throws IOException {
-        ResponseEntity<FileDto.Response> response = restTemplate.postForEntity(STORAGE_SERVICE_ENDPOINT, fileDto, FileDto.Response.class);
+    @PostMapping("/upload")
+    public ResponseEntity<FileDto.Response> uploadPhoto(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info(String.valueOf(file));
+        FileDto.Request fileReq = FileDto.Request.builder().file(file).build();
+        ResponseEntity<FileDto.Response> response = restTemplate.postForEntity(STORAGE_SERVICE_ENDPOINT, fileReq, FileDto.Response.class);
         FileDto.Response savedFile = response.getBody();
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFile);
 //        Resource resource = photoStorageService.save(photoDto.getFile());

@@ -5,6 +5,7 @@ import com.app.ecommerce.exceptions.ExpiredSessionException;
 import com.app.ecommerce.exceptions.InternalException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +21,7 @@ import java.sql.Date;
 import java.time.Instant;
 
 @Service
+@Slf4j
 public class JwtProvider {
 
     private KeyStore keyStore;
@@ -65,11 +67,11 @@ public class JwtProvider {
 
     public boolean validateToken(String jwt) {
         try {
-            System.out.println("i am here one");
+            log.info("i am here one");
             Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
-            System.out.println("i am here two");
+            log.info("i am here two");
         } catch (Exception e) {
-            System.out.println("i am here three");
+            log.info("i am here three");
             throw new AuthorizationException(e.getMessage());
         }
         return true;

@@ -1,9 +1,9 @@
 package com.app.ecommerce.controllers;
 
+import com.app.ecommerce.models.dtos.ResponsePayload;
 import com.app.ecommerce.models.dtos.ProductDto;
 import com.app.ecommerce.models.dtos.PromoDto;
 import com.app.ecommerce.models.dtos.PromoTypeDto;
-import com.app.ecommerce.models.entities.PromoType;
 import com.app.ecommerce.services.PromoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,28 +22,29 @@ public class PromoController {
 
     // ------------------------ GET ------------------------
     @GetMapping
-    public ResponseEntity<List<PromoDto>> listPromos(
-            @RequestParam("promoType") Optional<String> promoType
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(this.promoService.list(promoType));
+    public ResponseEntity<ResponsePayload<List<PromoDto>>> listPromos(@RequestParam("promoType") Optional<String> promoType) throws InterruptedException {
+        ResponsePayload<List<PromoDto>> responsePayload = new ResponsePayload<>("Promos", this.promoService.list(promoType));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
     @GetMapping(value = "/types")
-    public ResponseEntity<List<PromoTypeDto>> listPromoTypes() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.listPromoTypes());
+    public ResponseEntity<ResponsePayload<List<PromoTypeDto>>> listPromoTypes() {
+        ResponsePayload<List<PromoTypeDto>> responsePayload = new ResponsePayload<>("Promo Type", this.promoService.listPromoTypes());
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
     @GetMapping(value = "/{promoId}/products")
-    public ResponseEntity<List<ProductDto>> listPromoProducts(@PathVariable("promoId") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(promoService.listPromoProducts(id));
+    public ResponseEntity<ResponsePayload<List<ProductDto>>> listPromoProducts(@PathVariable("promoId") Long id) {
+        ResponsePayload<List<ProductDto>> responsePayload = new ResponsePayload<>("Products fo the given promo", this.promoService.listPromoProducts(id));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
     // ------------------------ PUT ------------------------
 
     @PutMapping("/{id}")
-    public ResponseEntity<PromoDto> updatePromo(@PathVariable("id") Long id, @RequestBody PromoDto promodto) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.promoService.update(id, promodto));
+    public ResponseEntity<ResponsePayload<PromoDto>> updatePromo(@PathVariable("id") Long id, @RequestBody PromoDto promodto) {
+        ResponsePayload<PromoDto> responsePayload = new ResponsePayload<>("Promo has updated successfully", this.promoService.update(id, promodto));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
 //    @PutMapping(value = "/{promoId}/products")
@@ -54,26 +55,30 @@ public class PromoController {
     // ------------------------ POST ------------------------
 
     @PostMapping
-    public ResponseEntity<PromoDto> createPromo(@RequestBody PromoDto promoDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.promoService.create(promoDto));
+    public ResponseEntity<ResponsePayload<PromoDto>> createPromo(@RequestBody PromoDto promoDto) {
+        ResponsePayload<PromoDto> responsePayload = new ResponsePayload<>("Promo has updated successfully", this.promoService.create(promoDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePayload);
     }
 
     @PostMapping(value = "/types")
-    public ResponseEntity<PromoType> createPromoType(@RequestBody PromoType promoType) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.promoService.createPromoType(promoType));
+    public ResponseEntity<ResponsePayload<PromoTypeDto>> createPromoType(@RequestBody PromoTypeDto promoTypeDto) {
+        ResponsePayload<PromoTypeDto> responsePayload = new ResponsePayload<>("Promo Type has been created successfully", this.promoService.createPromoType(promoTypeDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePayload);
     }
 
     // ------------------------ DELETE ------------------------
 
     @DeleteMapping
-    public ResponseEntity<Long> destroyPromo(@RequestParam("id") Long id) {
+    public ResponseEntity<ResponsePayload<Long>> destroyPromo(@RequestParam("id") Long id) {
         this.promoService.destroy(id);
-        return ResponseEntity.status(HttpStatus.OK).body(id);
+        ResponsePayload<Long> responsePayload = new ResponsePayload<>("Promo has deleted successfully", id);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
     @DeleteMapping("/types")
-    public ResponseEntity<String> destroyPromoType(@RequestParam("id") Long promoTypeId) {
-        this.promoService.destroyPromoType(promoTypeId);
-        return ResponseEntity.status(HttpStatus.OK).body("deleted");
+    public ResponseEntity<ResponsePayload<Long>> destroyPromoType(@RequestParam("id") Long id) {
+        this.promoService.destroyPromoType(id);
+        ResponsePayload<Long> responsePayload = new ResponsePayload<>("Promo Type has been deleted successfully", id);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 }

@@ -2,6 +2,7 @@ package com.app.ecommerce.exceptions;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -16,5 +17,9 @@ public class ExceptionDTO {
         this.message = message;
         this.httpStatus = httpStatus;
         this.timeStamp = ZonedDateTime.now(ZoneId.of("Z"));
+    }
+
+    public ResponseEntity<ExceptionDTO> toResponseEntity() {
+        return ResponseEntity.status(this.httpStatus).body(this);
     }
 }
