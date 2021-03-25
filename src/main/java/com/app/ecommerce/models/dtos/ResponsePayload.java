@@ -14,4 +14,9 @@ public class ResponsePayload<T> {
         this.message = message;
         this.data = data;
     }
+
+    public ResponsePayload(String message) {
+        this.message = message;
+        this.data = null;
+    }
 }
