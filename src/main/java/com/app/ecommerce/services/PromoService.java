@@ -1,5 +1,6 @@
 package com.app.ecommerce.services;
 
+import com.app.ecommerce.exceptions.EntityNotFoundException;
 import com.app.ecommerce.exceptions.MonaimException;
 import com.app.ecommerce.models.dtos.BannerDto;
 import com.app.ecommerce.models.dtos.ProductDto;
@@ -134,13 +135,18 @@ public class PromoService {
     }
 
     public List<PromoTypeDto> listPromoTypes() {
-        return this.promoTypeRepository.findAll().stream().map(this::mapToPromoTypeDto).collect(Collectors.toList());
+        return this.promoTypeRepository.findAll().stream().map(promoTypeMapper::toDto).collect(Collectors.toList());
     }
 
-    private PromoTypeDto mapToPromoTypeDto(PromoType promoType) {
-        return PromoTypeDto.builder()
-                .name(promoType.getName())
-                .description(promoType.getDescription())
-                .build();
+    public PromoTypeDto updatePromoType(Long id, PromoTypeDto promoTypeDto) {
+        assert id.equals(promoTypeDto.getId());
+        PromoType promoType = this.promoTypeRepository.save(promoTypeMapper.toEntity(promoTypeDto));
+        promoTypeDto.setId(promoType.getId());
+        return promoTypeDto;
+    }
+
+    public PromoDto retrieve(Long id) {
+        return this.promoMapper.toDto(this.promoRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("There is no promo with the given id")));
     }
 }

@@ -23,7 +23,7 @@ Category toEntity(CategoryDto categoryDto);
 CategoryDto toDto(Category category);
 
 @Named("toFlatCategoryDto")
-@Mapping(target = "product", ignore = true)
+@Mapping(target = "products", ignore = true)
 CategoryDto toFlatDto(Category category);
 
 @IterableMapping(qualifiedByName = "toFlatCategoryDto")

@@ -22,6 +22,6 @@ public class CategoryDto {
 	private String name;
 	private String description;
 	private String icon;
-	private List<ProductDto> product;
+	private List<ProductDto> products;
 
 }

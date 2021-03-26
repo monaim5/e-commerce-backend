@@ -4,36 +4,43 @@ import com.app.ecommerce.exceptions.AuthorizationException;
 import com.app.ecommerce.exceptions.EntityNotFoundException;
 import com.app.ecommerce.exceptions.ExceptionDTO;
 import com.app.ecommerce.exceptions.InternalException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<ExceptionDTO> handleAuthorizationException(AuthorizationException e) {
+        e.printStackTrace();
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
         return exceptionDTO.toResponseEntity();
     }
 
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<ExceptionDTO> handleInternalException(InternalException e) {
+        e.printStackTrace();
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         return exceptionDTO.toResponseEntity();
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionDTO> handleEntityNotFoundException(EntityNotFoundException e) {
+        e.printStackTrace();
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage(), HttpStatus.NOT_FOUND);
         return exceptionDTO.toResponseEntity();
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionDTO> handleGlobalException(Exception e) {
+        e.printStackTrace();
         ExceptionDTO exceptionDTO = new ExceptionDTO("Some thing went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+
         return exceptionDTO.toResponseEntity();
     }
 

@@ -19,7 +19,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ResponsePayload<List<CategoryDto>>> getCategories() {
-        ResponsePayload<List<CategoryDto>> responsePayload = new ResponsePayload<>("categoryService.getAll()", categoryService.getAll());
+        ResponsePayload<List<CategoryDto>> responsePayload = new ResponsePayload<>("Categories has been retrieved", categoryService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(responsePayload);
     }
 
