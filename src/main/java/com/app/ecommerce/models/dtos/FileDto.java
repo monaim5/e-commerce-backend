@@ -2,12 +2,12 @@ package com.app.ecommerce.models.dtos;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 public class FileDto {
 
     @Data
-    @Builder
+    @NoArgsConstructor
     public static class Response {
         private Long id;
         private String url;
@@ -17,6 +17,6 @@ public class FileDto {
     @Data
     @Builder
     public static class Request {
-        private MultipartFile file;
+        private byte[] file;
     }
 }
